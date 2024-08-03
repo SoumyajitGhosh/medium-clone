@@ -2,16 +2,19 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
-import { createBlogInput, updateBlogInput } from "@_soumyajit.ghosh_/medium-clone-common";
+import {
+  createBlogInput,
+  updateBlogInput,
+} from "@_soumyajit.ghosh_/medium-clone-common";
 
 export const blogRouter = new Hono<{
   Bindings: {
     DATABASE_URL: string;
     JWT_SECRET: string;
-  },
+  };
   Variables: {
     userId: any;
-  }
+  };
 }>();
 
 blogRouter.use("/*", async (c, next) => {
@@ -19,23 +22,21 @@ blogRouter.use("/*", async (c, next) => {
   const user = await verify(authHeader, c.env.JWT_SECRET);
   try {
     if (user) {
-    c.set("userId", user.id);
-    await next();
-  }
-  else {
-    c.status(403);
-    return c.json({
-      message: "You are not logged in"
-    })
+      c.set("userId", user.id);
+      await next();
+    } else {
+      c.status(403);
+      return c.json({
+        message: "You are not logged in",
+      });
     }
-  }
-  catch (e) {
+  } catch (e) {
     c.status(403);
     return c.json({
-      message: "You are not logged in"
-    })
+      message: "You are not logged in",
+    });
   }
-})
+});
 
 blogRouter.get("/get/::id", async (c) => {
   const id = c.req.param("id");
@@ -48,6 +49,16 @@ blogRouter.get("/get/::id", async (c) => {
       where: {
         id: id,
       },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        author: {
+          select: {
+            name: true,
+          }
+        }
+      }
     });
     return c.json({
       blog,
@@ -64,7 +75,18 @@ blogRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
-  const blogs = await prisma.post.findMany();
+  const blogs = await prisma.post.findMany({
+    select: {
+      content: true,
+      title: true,
+      id: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
   // need to add pagination
   return c.json({
     blogs,
