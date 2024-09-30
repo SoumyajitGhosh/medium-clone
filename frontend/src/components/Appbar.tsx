@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Avatar } from "./BlogCard";
 import { Link } from "react-router-dom";
+import SignoutDialog from "./SignoutDialog";
 
 export const Appbar = () => {
+  const [openSignout, setOpenSignout] = useState(false);
   return (
     <div className="border-b flex justify-between px-10 py-4">
       <Link
@@ -19,8 +22,13 @@ export const Appbar = () => {
             New
           </button>
         </Link>
-
-        <Avatar size={"big"} name="Soumyajit" />
+        <button
+          type="button"
+          onClick={() => setOpenSignout((prevState) => !prevState)}
+        >
+          <Avatar size={"big"} name="Soumyajit" />
+        </button>
+        <SignoutDialog open={openSignout} setOpen={setOpenSignout} />
       </div>
     </div>
   );
