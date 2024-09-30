@@ -6,11 +6,11 @@ export const Appbar = () => {
     <div className="border-b flex justify-between px-10 py-4">
       <Link
         to={"/blogs"}
-        className="flex flex-col justify-center cursor-pointer"
+        className="flex flex-row justify-center cursor-pointer"
       >
-        Medium
+        <img src={"../../app-logo.svg"} width="64px" height="64px" />
       </Link>
-      <div>
+      <div className="pt-4">
         <Link to={`/publish`}>
           <button
             type="button"
