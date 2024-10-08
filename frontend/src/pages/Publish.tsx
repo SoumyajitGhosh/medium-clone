@@ -76,7 +76,7 @@ function TextEditor({
             <label className="sr-only">Publish post</label>
             <ReactQuill
               theme="snow"
-              onChange={(content, delta, source, editor) => onChange(content)} // Adjusted for ReactQuill's signature
+              onChange={(content) => onChange(content)} // Adjusted for ReactQuill's signature
               className="focus:outline-none block w-full text-sm text-gray-800 bg-white border-0 pl-2"
               placeholder="Write an article..."
             />
