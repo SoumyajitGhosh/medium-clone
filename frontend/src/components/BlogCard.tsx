@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
 interface BlogCardProps {
   authorName: string;
   title: string;
@@ -14,6 +15,7 @@ export const BlogCard = ({
   content,
   publishedDate,
 }: BlogCardProps) => {
+  const sanitizedContent = DOMPurify.sanitize(content);
   return (
     <Link to={`/blog/${id}`}>
       <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer">
@@ -30,7 +32,16 @@ export const BlogCard = ({
           </div>
         </div>
         <div className="text-xl font-semibold pt-2">{title}</div>
-        <div className="text-md font-thin">{content.slice(0, 100) + "..."}</div>
+        <div className="text-md font-thin">
+          <div
+            dangerouslySetInnerHTML={{
+              __html:
+                content.length > 100
+                  ? sanitizedContent.slice(0, 100)
+                  : sanitizedContent,
+            }}
+          />
+        </div>
         <div className="text-slate-500 text-sm font-thin pt-4">
           {`${Math.ceil(content.length / 100)} minute(s) read`}
         </div>

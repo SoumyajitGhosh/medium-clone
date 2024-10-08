@@ -5,6 +5,7 @@ import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Appbar } from "../components/Appbar";
+import DOMPurify from "dompurify";
 
 export const Publish = () => {
   const [title, setTitle] = useState("");
@@ -17,7 +18,7 @@ export const Publish = () => {
         `${BACKEND_URL}/api/v1/blog`,
         {
           title,
-          content: description,
+          content: DOMPurify.sanitize(description),
         },
         {
           headers: {
@@ -73,7 +74,6 @@ function TextEditor({
         <div className="flex items-center justify-between border">
           <div className="my-2 bg-white rounded-b-lg w-full">
             <label className="sr-only">Publish post</label>
-            {/* ReactQuill editor - using the onChange to pass the content */}
             <ReactQuill
               theme="snow"
               onChange={(content, delta, source, editor) => onChange(content)} // Adjusted for ReactQuill's signature

@@ -6,6 +6,7 @@ import {
   createBlogInput,
   updateBlogInput,
 } from "@_soumyajit.ghosh_/medium-clone-common";
+import sanitizeHtml from 'sanitize-html';
 
 export const blogRouter = new Hono<{
   Bindings: {
@@ -38,33 +39,55 @@ blogRouter.use("/*", async (c, next) => {
   }
 });
 
-blogRouter.get("/get/::id", async (c) => {
+blogRouter.get("/get/:id", async (c) => {
+  // Get 'id' from query parameters
   const id = c.req.param("id");
+
+  // Check if the 'id' is provided in the query params
+  if (!id) {
+    c.status(400);
+    return c.json({
+      message: "Missing 'id' query parameter",
+    });
+  }
+
+  // Initialize Prisma client with acceleration
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
-
   try {
+    // Fetch the blog post from the database
     const blog = await prisma.post.findFirst({
       where: {
-        id: id,
+        id: id, // Search by ID
       },
       select: {
-        id: true,
-        title: true,
         content: true,
+        title: true,
+        id: true,
         author: {
           select: {
             name: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
+
+    // Return 404 if the blog post is not found
+    if (!blog) {
+      c.status(404);
+      return c.json({
+        message: "Blog post not found",
+      });
+    }
+
+    // Return the found blog post
     return c.json({
       blog,
     });
   } catch (e) {
-    c.status(411);
+    console.error("Error while fetching blog post:", e);
+    c.status(500);
     return c.json({
       message: "Error while fetching blog post",
     });
@@ -107,10 +130,21 @@ blogRouter.post("/", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
+
+  // Sanitize the content to remove any harmful HTML and prevent XSS attacks
+  const sanitizedContent = sanitizeHtml(body.content, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'u']),
+    allowedAttributes: {
+      a: ['href', 'name', 'target'],
+      img: ['src'],
+    },
+  });
+
+
   const blog = await prisma.post.create({
     data: {
       title: body.title,
-      content: body.content,
+      content: sanitizedContent,
       authorId: authorId,
     },
   });
@@ -132,13 +166,22 @@ blogRouter.put("/", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
+  // Sanitize the content to remove any harmful HTML and prevent XSS attacks
+  const sanitizedContent = sanitizeHtml(body.content, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'u']),
+    allowedAttributes: {
+      a: ['href', 'name', 'target'],
+      img: ['src'],
+    },
+  });
+
   const blog = await prisma.post.update({
     where: {
       id: body.id,
     },
     data: {
       title: body.title,
-      content: body.content,
+      content: sanitizedContent,
     },
   });
   return c.json({

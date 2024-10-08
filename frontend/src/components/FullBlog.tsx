@@ -1,8 +1,11 @@
 import { Blog } from "../hooks";
 import { Appbar } from "./Appbar";
 import { Avatar } from "./BlogCard";
+import DOMPurify from "dompurify";
 
 export const FullBlog = ({ blog }: { blog: Blog }) => {
+  const sanitizedContent = DOMPurify.sanitize(blog.content);
+
   return (
     <div>
       <Appbar />
@@ -11,7 +14,9 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
           <div className="col-span-8">
             <div className="text-5xl font-extrabold">{blog.title}</div>
             <div className="text-slate-500 pt-2">Post on 2nd December 2023</div>
-            <div className="pt-4">{blog.content}</div>
+            <div className="pt-4">
+              <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+            </div>
           </div>
           <div className="col-span-4">
             <div className="text-slate-600 text-lg">Author</div>
