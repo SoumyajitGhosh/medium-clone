@@ -1,23 +1,56 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import {
+  Navigate,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import { Signup } from "./pages/Signup";
 import { Signin } from "./pages/Signin";
 import { Blog } from "./pages/Blog";
 import { Blogs } from "./pages/Blogs";
 import { Publish } from "./pages/Publish";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/blog/:id" element={<Blog />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/publish" element={<Publish />} />
-        <Route path="*" element={<Navigate to="/signup" />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  const isAccessTokenAvailable = () => {
+    if (localStorage.getItem("token")) return true;
+    else return false;
+  };
+
+  const router = createBrowserRouter([
+    {
+      path: "/signup",
+      element: <Signup />,
+      index: true,
+    },
+    {
+      path: "/signin",
+      element: <Signin />,
+      index: true,
+    },
+    {
+      element: <ProtectedRoute isAuthenticated={isAccessTokenAvailable()} />,
+      children: [
+        {
+          path: "/blog/:id",
+          element: <Blog />,
+        },
+        {
+          path: "/blogs",
+          element: <Blogs />,
+        },
+        {
+          path: "/publish",
+          element: <Publish />,
+        },
+      ],
+    },
+    {
+      path: "*",
+      element: <Navigate to="/signup" />,
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;
