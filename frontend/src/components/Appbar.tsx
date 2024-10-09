@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Avatar } from "./BlogCard";
 import { Link } from "react-router-dom";
 import SignoutDialog from "./SignoutDialog";
+import AppLogo from "../assets/appLogo.png";
 
 export const Appbar = () => {
   const [openSignout, setOpenSignout] = useState(false);
@@ -11,7 +12,7 @@ export const Appbar = () => {
         to={"/blogs"}
         className="flex flex-row justify-center cursor-pointer"
       >
-        <img src={"../assets/app-logo.svg"} width="64px" height="64px" />
+        <img src={AppLogo} width="64px" height="64px" />
       </Link>
       <div className="pt-4">
         <Link to={`/publish`}>
