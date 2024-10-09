@@ -11,7 +11,7 @@ export const Appbar = () => {
         to={"/blogs"}
         className="flex flex-row justify-center cursor-pointer"
       >
-        <img src={"../../app-logo.svg"} width="64px" height="64px" />
+        <img src={"../assets/app-logo.svg"} width="64px" height="64px" />
       </Link>
       <div className="pt-4">
         <Link to={`/publish`}>
