@@ -36,7 +36,7 @@ export const Publish = () => {
     <div>
       <Appbar />
       <div className="flex justify-center w-full pt-8">
-        <div className="max-w-screen-lg w-full">
+        <div /*className="max-w-screen-lg w-full"*/ className="w-[90%]">
           {/* Controlled input for title */}
           <input
             value={title}
@@ -77,7 +77,7 @@ function TextEditor({
             <ReactQuill
               theme="snow"
               onChange={(content) => onChange(content)} // Adjusted for ReactQuill's signature
-              className="focus:outline-none block w-full text-sm text-gray-800 bg-white border-0 pl-2"
+              className="focus:outline-none block w-full text-sm text-gray-800 bg-white border-0 px-2 min-h-[200px]"
               placeholder="Write an article..."
             />
           </div>

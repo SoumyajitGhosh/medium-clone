@@ -46,7 +46,11 @@ function App() {
     },
     {
       path: "*",
-      element: <Navigate to="/signup" />,
+      element: isAccessTokenAvailable() ? (
+        <Navigate to="/blogs" />
+      ) : (
+        <Navigate to="/signup" />
+      ),
     },
   ]);
 
