@@ -1,10 +1,11 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { BACKEND_URL, callApi } from "../config";
+import { BACKEND_URL, callApi, errorResponse } from "../config";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Appbar } from "../components/Appbar";
 import DOMPurify from "dompurify";
+import { errorNotify, successNotify } from "../components/ToastAlert";
 
 export const Publish = () => {
   const [title, setTitle] = useState("");
@@ -24,9 +25,11 @@ export const Publish = () => {
           Authorization: `${localStorage.getItem("token")}`,
         }
       );
+      successNotify("New Blog Created");
       navigate(`/blog/${response.data.id}`);
     } catch (e) {
       // alert user
+      errorNotify(errorResponse(e));
     }
   };
 

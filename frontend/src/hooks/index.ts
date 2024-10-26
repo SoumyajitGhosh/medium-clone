@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { BACKEND_URL, callApi } from "../config";
+import { BACKEND_URL, callApi, errorResponse } from "../config";
+import { errorNotify } from "../components/ToastAlert";
 
 export interface Blog {
     "content": string;
@@ -27,6 +28,7 @@ export const useBlog = ({ id }: { id: string }) => {
       setBlog(response.data.blog);
       setLoading(false);
     } catch (err) {
+      errorNotify(errorResponse(err));
     }
   }
   useEffect(() => {
@@ -57,6 +59,7 @@ export const useBlogs = () => {
       setBlogs(response.data.blogs);
       setLoading(false);
     } catch (err) {
+      errorNotify(errorResponse(err));
     }
   }
 

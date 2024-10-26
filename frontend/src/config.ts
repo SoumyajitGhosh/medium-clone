@@ -19,7 +19,6 @@ export function callApi<T>(
   payload?: any,
   headers?: Record<string, string>// Optional headers
 ): Promise<ApiResponse<T>> {
-    console.log("headers:",headers)
   return new Promise((resolve, reject) => {
     axios({
       url,
@@ -42,5 +41,13 @@ export function callApi<T>(
         }
       });
   });
+}
+
+export function errorResponse(error: unknown) {
+  if (typeof error === "object" && error !== null && "message" in error) {
+    return `${error.message}`;
+  } else {
+    return "An unknown error occurred";
+  }
 }
 

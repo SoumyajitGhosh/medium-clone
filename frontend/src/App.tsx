@@ -9,6 +9,7 @@ import { Blog } from "./pages/Blog";
 import { Blogs } from "./pages/Blogs";
 import { Publish } from "./pages/Publish";
 import ProtectedRoute from "./ProtectedRoute";
+import { CustomToaster } from "./components/ToastAlert";
 
 function App() {
   const isAccessTokenAvailable = () => {
@@ -54,7 +55,12 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <CustomToaster />
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;

@@ -4,7 +4,8 @@ import {
   SignupInput,
   SigninInput,
 } from "@_soumyajit.ghosh_/medium-clone-common";
-import { BACKEND_URL, callApi } from "../config";
+import { BACKEND_URL, callApi, errorResponse } from "../config";
+import { errorNotify, successNotify } from "./ToastAlert";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
@@ -24,11 +25,12 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
         "POST",
         postInputs
       );
-      const { jwt } = response.data;
+      const { jwt } = response?.data;
+      successNotify("Login Succesful");
       navigate("/blogs");
       localStorage.setItem("token", jwt);
     } catch (e) {
-      // alert user
+      errorNotify(errorResponse(e));
     }
   }
   return (
