@@ -4,8 +4,7 @@ import {
   SignupInput,
   SigninInput,
 } from "@_soumyajit.ghosh_/medium-clone-common";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL, callApi } from "../config";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
@@ -20,13 +19,14 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
 
   async function sendRequest() {
     try {
-      const response = await axios.post(
+      const response = await callApi<any>(
         `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
+        "POST",
         postInputs
       );
       const { jwt } = response.data;
-      localStorage.setItem("token", jwt);
       navigate("/blogs");
+      localStorage.setItem("token", jwt);
     } catch (e) {
       // alert user
     }

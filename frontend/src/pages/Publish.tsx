@@ -1,7 +1,6 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL, callApi } from "../config";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Appbar } from "../components/Appbar";
@@ -14,21 +13,20 @@ export const Publish = () => {
 
   const handlePublish = async () => {
     try {
-      const response = await axios.post(
+      const response = await callApi<any>(
         `${BACKEND_URL}/api/v1/blog`,
+        "POST",
         {
           title,
           content: DOMPurify.sanitize(description),
         },
         {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
+          Authorization: `${localStorage.getItem("token")}`,
         }
       );
       navigate(`/blog/${response.data.id}`);
-    } catch (error) {
-      console.error("Failed to publish the post:", error);
+    } catch (e) {
+      // alert user
     }
   };
 
