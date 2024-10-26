@@ -10,26 +10,22 @@ import { Blogs } from "./pages/Blogs";
 import { Publish } from "./pages/Publish";
 import ProtectedRoute from "./ProtectedRoute";
 import { CustomToaster } from "./components/ToastAlert";
+import { AuthProvider, useAuth } from "./AuthContext";
 
-function App() {
-  const isAccessTokenAvailable = () => {
-    if (localStorage.getItem("token")) return true;
-    else return false;
-  };
+function AppRoutes() {
+  const { isAuthenticated } = useAuth();
 
   const router = createBrowserRouter([
     {
       path: "/signup",
-      element: <Signup />,
-      index: true,
+      element: isAuthenticated ? <Navigate to="/blogs" /> : <Signup />,
     },
     {
       path: "/signin",
-      element: <Signin />,
-      index: true,
+      element: isAuthenticated ? <Navigate to="/blogs" /> : <Signin />,
     },
     {
-      element: <ProtectedRoute isAuthenticated={isAccessTokenAvailable()} />,
+      element: <ProtectedRoute isAuthenticated={isAuthenticated} />,
       children: [
         {
           path: "/blog/:id",
@@ -47,7 +43,7 @@ function App() {
     },
     {
       path: "*",
-      element: isAccessTokenAvailable() ? (
+      element: isAuthenticated ? (
         <Navigate to="/blogs" />
       ) : (
         <Navigate to="/signup" />
@@ -55,11 +51,15 @@ function App() {
     },
   ]);
 
+  return <RouterProvider router={router} />;
+}
+
+function App() {
   return (
-    <>
+    <AuthProvider>
       <CustomToaster />
-      <RouterProvider router={router} />
-    </>
+      <AppRoutes />
+    </AuthProvider>
   );
 }
 

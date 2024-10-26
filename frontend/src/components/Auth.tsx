@@ -6,9 +6,11 @@ import {
 } from "@_soumyajit.ghosh_/medium-clone-common";
 import { BACKEND_URL, callApi, errorResponse } from "../config";
 import { errorNotify, successNotify } from "./ToastAlert";
+import { useAuth } from "../AuthContext";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const initialInputs =
     type === "signup"
       ? { name: "", email: "", password: "" }
@@ -28,7 +30,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       const { jwt } = response?.data;
       successNotify("Login Succesful");
       navigate("/blogs");
-      localStorage.setItem("token", jwt);
+      login(jwt);
     } catch (e) {
       errorNotify(errorResponse(e));
     }
