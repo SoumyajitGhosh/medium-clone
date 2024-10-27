@@ -11,6 +11,7 @@ import { Publish } from "./pages/Publish";
 import ProtectedRoute from "./ProtectedRoute";
 import { CustomToaster } from "./components/ToastAlert";
 import { AuthProvider, useAuth } from "./AuthContext";
+import { ProfileSection } from "./pages/ProfileSection";
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -38,6 +39,10 @@ function AppRoutes() {
         {
           path: "/publish",
           element: <Publish />,
+        },
+        {
+          path: "/my-profile",
+          element: <ProfileSection />,
         },
       ],
     },

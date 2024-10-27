@@ -1,5 +1,5 @@
-export const BACKEND_URL = "https://backend.soumyajitghosh-official.workers.dev"
-
+// export const BACKEND_URL = "https://backend.soumyajitghosh-official.workers.dev"
+export const BACKEND_URL = "http://localhost:8787";
 import axios, { Method } from 'axios';
 
 interface ApiResponse<T> {
@@ -32,6 +32,7 @@ export function callApi<T>(
       .catch((error: unknown) => {
         if (axios.isAxiosError(error)) {
           const apiError: ApiErrorResponse = error.response?.data;
+          console.log("Error:", apiError, error)
           const message = apiError?.message || "An error occurred";
           reject({ success: false, message });
         } else if (error instanceof Error) {

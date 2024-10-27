@@ -67,7 +67,9 @@ blogRouter.get("/get/:id", async (c) => {
         id: true,
         author: {
           select: {
+            email: true,
             name: true,
+            bio: true
           },
         },
       },
@@ -188,3 +190,38 @@ blogRouter.put("/", async (c) => {
     id: blog.id,
   });
 });
+
+blogRouter.delete("/post/:id", async (c) => {
+  const postId = c.req.param('id');
+  const authorId = c.get("userId");
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const deletedPost = await prisma.post.delete({
+      where: {
+        id: postId,
+        authorId: authorId
+      }
+    })
+    return c.json({ message: 'Post deleted successfully', post: deletedPost }, 200);
+  }
+  catch (err) {
+    return c.json({ error: 'Post not found or could not be deleted' }, 404);
+  }
+})
+
+blogRouter.delete("/posts", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  try {
+    const result = await prisma.post.deleteMany();
+    return c.json({ message: 'Post deleted successfully', post: result.count }, 200);
+  }
+  catch (err) {
+    return c.json({ error: 'Post not found or could not be deleted' }, 404);
+  }
+})

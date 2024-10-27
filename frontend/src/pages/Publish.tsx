@@ -6,11 +6,13 @@ import { useState } from "react";
 import { Appbar } from "../components/Appbar";
 import DOMPurify from "dompurify";
 import { errorNotify, successNotify } from "../components/ToastAlert";
+import { useAuth } from "../AuthContext";
 
 export const Publish = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handlePublish = async () => {
     try {
@@ -20,6 +22,7 @@ export const Publish = () => {
         {
           title,
           content: DOMPurify.sanitize(description),
+          author: user,
         },
         {
           Authorization: `${localStorage.getItem("token")}`,
@@ -64,7 +67,7 @@ export const Publish = () => {
 };
 
 // Updated TextEditor component
-function TextEditor({
+export function TextEditor({
   onChange,
 }: {
   onChange: (value: string) => void; // Accepts a string

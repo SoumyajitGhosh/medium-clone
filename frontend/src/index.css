@@ -16,3 +16,31 @@
     overflow-y: auto;
     width: 100%;
   }
+
+  .popover__content:before {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    right: calc(50% - 10px);
+    top: -8px;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #bfbfbf transparent;
+    transition-duration: 0.3s;
+    transition-property: transform;
+  }
+
+  .speech-bubble {
+    background: #cc39d8;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 4em;
+    margin-bottom: 1em;
+    padding: 0 1em;
+    position: relative;
+    text-align: center;
+    vertical-align: top;
+    min-width: 7em;
+    margin: 30px 10px;
+ }

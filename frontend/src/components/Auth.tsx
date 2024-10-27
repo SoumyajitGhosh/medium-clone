@@ -101,18 +101,22 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   );
 };
 
-interface LabelledInputType {
+export interface LabelledInputType {
   label: string;
   placeholder: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  disabled?: boolean;
+  value?: string;
 }
 
-function LabelledInput({
+export function LabelledInput({
   label,
   placeholder,
   type,
   onChange,
+  disabled,
+  value,
 }: LabelledInputType) {
   return (
     <div>
@@ -120,11 +124,13 @@ function LabelledInput({
         {label}
       </label>
       <input
+        disabled={disabled}
         type={type || "text"}
         id="first_name"
         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         placeholder={placeholder}
         onChange={onChange}
+        value={value}
         required
       />
     </div>
