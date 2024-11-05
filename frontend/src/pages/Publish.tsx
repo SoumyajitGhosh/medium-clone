@@ -17,7 +17,7 @@ export const Publish = () => {
   const handlePublish = async () => {
     try {
       const response = await callApi<any>(
-        `${import.meta.env.BACKEND_URL}/api/v1/blog`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/blog`,
         "POST",
         {
           title,

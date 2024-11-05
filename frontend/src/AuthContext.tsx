@@ -47,7 +47,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const fetchUserInfo = async (token: string) => {
     try {
       const response = await callApi<any>(
-        `${import.meta.env.BACKEND_URL}/api/v1/user/personal-info/${token}`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/v1/user/personal-info/${token}`,
         "GET",
         undefined,
         {

@@ -33,7 +33,7 @@ export const ProfileSection = () => {
       try {
         const response = await callApi<any>(
           `${
-            import.meta.env.BACKEND_URL
+            import.meta.env.VITE_BACKEND_URL
           }/api/v1/user/modify-info/${localStorage.getItem("token")}`,
           "PATCH",
           reqBody,
