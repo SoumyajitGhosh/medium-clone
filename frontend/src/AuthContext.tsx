@@ -21,6 +21,7 @@ interface AuthContextProps {
   user: User | null;
   login: (token: string) => void;
   logout: () => void;
+  fetchUserInfo: (token: string) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -46,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const fetchUserInfo = async (token: string) => {
     try {
       const response = await callApi<any>(
-        `${BACKEND_URL}/api/v1/user/personalInfo/${token}`,
+        `${BACKEND_URL}/api/v1/user/personal-info/${token}`,
         "GET",
         undefined,
         {
@@ -75,7 +76,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, token, user, login, logout }}
+      value={{ isAuthenticated, token, user, login, logout, fetchUserInfo }}
     >
       {children}
     </AuthContext.Provider>

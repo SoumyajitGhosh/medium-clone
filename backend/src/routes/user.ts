@@ -80,7 +80,7 @@ userRouter.post("/signin", async (c) => {
   }
 });
 
-userRouter.get("/personalInfo/:id", async (c) => {
+userRouter.get("/personal-info/:id", async (c) => {
   // Get 'id' from query parameters
   const id = c.req.param("id");
 
@@ -135,3 +135,52 @@ userRouter.get("/", async (c) => {
   const result = await prisma.user.findMany();
   return c.json({ result }, 200);
 })
+
+userRouter.patch("/modify-info/:id", async (c) => {
+  console.log("Request:", c.req);
+
+  // Get 'id' from route parameters
+  const id = c.req.param("id"); // Ensure this method is correct for your framework
+  const updates = await c.req.json();
+
+  // Check if the 'id' is provided in the URL parameters
+  if (!id) {
+    c.status(400);
+    return c.json({
+      message: "Missing 'id' query parameter",
+    });
+  }
+
+  // Initialize Prisma client with acceleration
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const userId = (await verify(id, c.env.JWT_SECRET)) as { id: string };
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId.id,
+      },
+    });
+
+    if (!user) {
+      c.status(403);
+      return c.json({ message: "User not found" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: userId.id,
+      },
+      data: updates,
+    });
+
+    return c.json({ message: "User data updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Error updating user:", err);
+    c.status(500);
+    return c.json({ message: "Internal server error" });
+  }
+});

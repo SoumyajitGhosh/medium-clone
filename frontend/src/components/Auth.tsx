@@ -104,7 +104,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
 export interface LabelledInputType {
   label: string;
   placeholder: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   disabled?: boolean;
   value?: string;
