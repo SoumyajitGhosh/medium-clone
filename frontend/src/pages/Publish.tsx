@@ -1,6 +1,6 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { BACKEND_URL, callApi, errorResponse } from "../config";
+import { callApi, errorResponse } from "../config";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Appbar } from "../components/Appbar";
@@ -17,7 +17,7 @@ export const Publish = () => {
   const handlePublish = async () => {
     try {
       const response = await callApi<any>(
-        `${BACKEND_URL}/api/v1/blog`,
+        `${import.meta.env.BACKEND_URL}/api/v1/blog`,
         "POST",
         {
           title,

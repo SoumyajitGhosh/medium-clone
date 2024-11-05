@@ -4,7 +4,7 @@ import {
   SignupInput,
   SigninInput,
 } from "@_soumyajit.ghosh_/medium-clone-common";
-import { BACKEND_URL, callApi, errorResponse } from "../config";
+import { callApi, errorResponse } from "../config";
 import { errorNotify, successNotify } from "./ToastAlert";
 import { useAuth } from "../AuthContext";
 
@@ -23,7 +23,9 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   async function sendRequest() {
     try {
       const response = await callApi<any>(
-        `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
+        `${import.meta.env.BACKEND_URL}/api/v1/user/${
+          type === "signup" ? "signup" : "signin"
+        }`,
         "POST",
         postInputs
       );

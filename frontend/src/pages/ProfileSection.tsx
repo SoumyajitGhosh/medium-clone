@@ -3,7 +3,7 @@ import { Appbar } from "../components/Appbar";
 import { LabelledInput } from "../components/Auth";
 import { TextEditor } from "./Publish";
 import { useAuth } from "../AuthContext";
-import { BACKEND_URL, callApi, errorResponse } from "../config";
+import { callApi, errorResponse } from "../config";
 import { errorNotify, successNotify } from "../components/ToastAlert";
 import { useNavigate } from "react-router-dom";
 
@@ -32,9 +32,9 @@ export const ProfileSection = () => {
     if (Object.keys(reqBody).length > 0) {
       try {
         const response = await callApi<any>(
-          `${BACKEND_URL}/api/v1/user/modify-info/${localStorage.getItem(
-            "token"
-          )}`,
+          `${
+            import.meta.env.BACKEND_URL
+          }/api/v1/user/modify-info/${localStorage.getItem("token")}`,
           "PATCH",
           reqBody,
           {

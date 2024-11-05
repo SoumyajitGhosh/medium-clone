@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BACKEND_URL, callApi, errorResponse } from "../config";
+import { callApi, errorResponse } from "../config";
 import { errorNotify } from "../components/ToastAlert";
 
 export interface Blog {
@@ -18,7 +18,7 @@ export const useBlog = ({ id }: { id: string }) => {
     setLoading(true);
     try {
       const response = await callApi<any>(
-        `${BACKEND_URL}/api/v1/blog/get/${id}`,
+        `${import.meta.env.BACKEND_URL}/api/v1/blog/get/${id}`,
         "GET",
         undefined,
         {
@@ -49,7 +49,7 @@ export const useBlogs = () => {
     setLoading(true);
     try {
       const response = await callApi<any>(
-        `${BACKEND_URL}/api/v1/blog/bulk`,
+        `${import.meta.env.BACKEND_URL}/api/v1/blog/bulk`,
         "GET",
         undefined,
         {
