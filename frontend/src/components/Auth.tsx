@@ -23,7 +23,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   async function sendRequest() {
     try {
       const response = await callApi<any>(
-        `${import.meta.env.BACKEND_URL}/api/v1/user/${
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/${
           type === "signup" ? "signup" : "signin"
         }`,
         "POST",

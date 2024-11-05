@@ -18,7 +18,7 @@ export const useBlog = ({ id }: { id: string }) => {
     setLoading(true);
     try {
       const response = await callApi<any>(
-        `${import.meta.env.BACKEND_URL}/api/v1/blog/get/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/blog/get/${id}`,
         "GET",
         undefined,
         {
@@ -49,7 +49,7 @@ export const useBlogs = () => {
     setLoading(true);
     try {
       const response = await callApi<any>(
-        `${import.meta.env.BACKEND_URL}/api/v1/blog/bulk`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/blog/bulk`,
         "GET",
         undefined,
         {
