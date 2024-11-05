@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { callApi, errorResponse } from "../config";
+import { errorNotify } from "../components/ToastAlert";
 
 export interface Blog {
     "content": string;
@@ -12,18 +12,27 @@ export interface Blog {
 }
 
 export const useBlog = ({ id }: { id: string }) => {
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [blog, setBlog] = useState<Blog>();
-
-  useEffect(() => {
-      axios.get(`${BACKEND_URL}/api/v1/blog/get/${id}`, {
-          headers: {
-            Authorization: localStorage.getItem("token")
+  const fetchBlog = async () => {
+    setLoading(true);
+    try {
+      const response = await callApi<any>(
+        `${import.meta.env.BACKEND_URL}/api/v1/blog/get/${id}`,
+        "GET",
+        undefined,
+        {
+          Authorization: `${localStorage?.getItem("token")}`,
         }
-    }).then((response) => {
+      );
       setBlog(response.data.blog);
       setLoading(false);
-    });
+    } catch (err) {
+      errorNotify(errorResponse(err));
+    }
+  }
+  useEffect(() => {
+    fetchBlog();
   }, []);
 
   return {
@@ -36,15 +45,26 @@ export const useBlogs = () => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
-  useEffect(() => {
-      axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
-          headers: {
-            Authorization: localStorage.getItem("token")
+  const fetchBlogs = async () => {
+    setLoading(true);
+    try {
+      const response = await callApi<any>(
+        `${import.meta.env.BACKEND_URL}/api/v1/blog/bulk`,
+        "GET",
+        undefined,
+        {
+          Authorization: `${localStorage.getItem("token")}`,
         }
-    }).then((response) => {
+      );
       setBlogs(response.data.blogs);
       setLoading(false);
-    });
+    } catch (err) {
+      errorNotify(errorResponse(err));
+    }
+  }
+
+  useEffect(() => {
+    fetchBlogs();
   }, []);
 
   return {

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 interface SignoutDialogProps {
   open: boolean;
@@ -8,10 +9,11 @@ interface SignoutDialogProps {
 
 const SignoutDialog: React.FC<SignoutDialogProps> = ({ open, setOpen }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   if (!open) return null;
 
   const handleLogout = () => {
-    localStorage.clear();
+    logout();
     setOpen(false);
     navigate("/signin");
   };

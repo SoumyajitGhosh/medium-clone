@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  engineType = library
 }
 
 datasource db {
@@ -13,6 +12,7 @@ model User {
   email    String   @unique
   name     String?
   password String
+  bio      String?
   posts    Post[]
 }
 

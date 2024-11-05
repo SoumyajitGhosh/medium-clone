@@ -4,11 +4,13 @@ import {
   SignupInput,
   SigninInput,
 } from "@_soumyajit.ghosh_/medium-clone-common";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { callApi, errorResponse } from "../config";
+import { errorNotify, successNotify } from "./ToastAlert";
+import { useAuth } from "../AuthContext";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const initialInputs =
     type === "signup"
       ? { name: "", email: "", password: "" }
@@ -20,15 +22,19 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
 
   async function sendRequest() {
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
+      const response = await callApi<any>(
+        `${import.meta.env.BACKEND_URL}/api/v1/user/${
+          type === "signup" ? "signup" : "signin"
+        }`,
+        "POST",
         postInputs
       );
-      const { jwt } = response.data;
-      localStorage.setItem("token", jwt);
+      const { jwt } = response?.data;
+      successNotify("Login Succesful");
       navigate("/blogs");
+      login(jwt);
     } catch (e) {
-      // alert user
+      errorNotify(errorResponse(e));
     }
   }
   return (
@@ -97,18 +103,22 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   );
 };
 
-interface LabelledInputType {
+export interface LabelledInputType {
   label: string;
   placeholder: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  disabled?: boolean;
+  value?: string;
 }
 
-function LabelledInput({
+export function LabelledInput({
   label,
   placeholder,
   type,
   onChange,
+  disabled,
+  value,
 }: LabelledInputType) {
   return (
     <div>
@@ -116,11 +126,13 @@ function LabelledInput({
         {label}
       </label>
       <input
+        disabled={disabled}
         type={type || "text"}
         id="first_name"
         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         placeholder={placeholder}
         onChange={onChange}
+        value={value}
         required
       />
     </div>

@@ -1,34 +1,38 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { callApi, errorResponse } from "../config";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Appbar } from "../components/Appbar";
 import DOMPurify from "dompurify";
+import { errorNotify, successNotify } from "../components/ToastAlert";
+import { useAuth } from "../AuthContext";
 
 export const Publish = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handlePublish = async () => {
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/v1/blog`,
+      const response = await callApi<any>(
+        `${import.meta.env.BACKEND_URL}/api/v1/blog`,
+        "POST",
         {
           title,
           content: DOMPurify.sanitize(description),
+          author: user,
         },
         {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
+          Authorization: `${localStorage.getItem("token")}`,
         }
       );
+      successNotify("New Blog Created");
       navigate(`/blog/${response.data.id}`);
-    } catch (error) {
-      console.error("Failed to publish the post:", error);
+    } catch (e) {
+      // alert user
+      errorNotify(errorResponse(e));
     }
   };
 
@@ -36,7 +40,7 @@ export const Publish = () => {
     <div>
       <Appbar />
       <div className="flex justify-center w-full pt-8">
-        <div className="max-w-screen-lg w-full">
+        <div /*className="max-w-screen-lg w-full"*/ className="w-[90%]">
           {/* Controlled input for title */}
           <input
             value={title}
@@ -63,7 +67,7 @@ export const Publish = () => {
 };
 
 // Updated TextEditor component
-function TextEditor({
+export function TextEditor({
   onChange,
 }: {
   onChange: (value: string) => void; // Accepts a string
@@ -77,7 +81,7 @@ function TextEditor({
             <ReactQuill
               theme="snow"
               onChange={(content) => onChange(content)} // Adjusted for ReactQuill's signature
-              className="focus:outline-none block w-full text-sm text-gray-800 bg-white border-0 pl-2"
+              className="focus:outline-none block w-full text-sm text-gray-800 bg-white border-0 px-2 min-h-[200px]"
               placeholder="Write an article..."
             />
           </div>

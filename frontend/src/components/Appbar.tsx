@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Avatar } from "./BlogCard";
 import { Link } from "react-router-dom";
-import SignoutDialog from "./SignoutDialog";
 import AppLogo from "../assets/appLogo.png";
+import Popover from "./Popover";
 
 export const Appbar = () => {
-  const [openSignout, setOpenSignout] = useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
   return (
     <div className="border-b flex justify-between px-10 py-4">
       <Link
@@ -25,11 +25,11 @@ export const Appbar = () => {
         </Link>
         <button
           type="button"
-          onClick={() => setOpenSignout((prevState) => !prevState)}
+          onClick={() => setOpenPopover((prevState) => !prevState)}
         >
           <Avatar size={"big"} name="Soumyajit" />
         </button>
-        <SignoutDialog open={openSignout} setOpen={setOpenSignout} />
+        <Popover open={openPopover} setOpen={setOpenPopover} />
       </div>
     </div>
   );

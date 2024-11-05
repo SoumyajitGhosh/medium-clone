@@ -5,7 +5,6 @@ import DOMPurify from "dompurify";
 
 export const FullBlog = ({ blog }: { blog: Blog }) => {
   const sanitizedContent = DOMPurify.sanitize(blog.content);
-
   return (
     <div>
       <Appbar />
